@@ -39,14 +39,12 @@ function Logger (options) {
 }
 
 Logger.levels = [
-  'emergency',
-  'alert',
-  'critical',
-  'error',
-  'warning',
-  'notice',
-  'info',
-  'debug'
+  "trace",
+  "debug",
+  "info",
+  "warn",
+  "error",
+  "fatal",
 ]
 
 // Add level constants
@@ -125,6 +123,12 @@ Logger.prototype.log = function (level, msg, extra, done) {
     !this.streams[i]
   ) {
     return
+  }
+
+  if(typeof msg === "object"){
+    const tmpExtra = extra
+    extra = msg
+    msg = tmpExtra
   }
 
   // Extra is optional
