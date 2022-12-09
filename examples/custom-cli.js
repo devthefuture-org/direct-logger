@@ -1,8 +1,8 @@
 
-const Loggerr = require('../').Loggerr
+const Logger = require('../').Logger
 const cli = require('../formatters/cli').create
 
-const log = new Loggerr({
+const log = new Logger({
   formatter: cli({
     levels: {
       fatal: 'red',

@@ -1,7 +1,7 @@
 
-const Loggerr = require('../').Loggerr
+const Logger = require('../').Logger
 
-const log = new Loggerr({
+const log = new Logger({
   formatter: 'cli',
   level: 'info'
 })

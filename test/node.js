@@ -2,7 +2,7 @@ const { describe, it, before, after } = require('mocha')
 const assert = require('assert')
 const fs = require('fs')
 const path = require('path')
-const Logger = require('../').Loggerr
+const Logger = require('../').Logger
 const logdir = path.join(__dirname, 'log')
 
 describe('Logger - node specific', function () {

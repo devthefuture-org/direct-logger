@@ -1,12 +1,12 @@
-function Loggerr (options) {
-  if (!(this instanceof Loggerr)) {
-    return new Loggerr(options)
+function Logger (options) {
+  if (!(this instanceof Logger)) {
+    return new Logger(options)
   }
   const opts = options || {}
 
   // Setup levels
-  this.levels = opts.levels || Loggerr.levels
-  this.streams = opts.streams || Loggerr.defaultOptions.streams
+  this.levels = opts.levels || Logger.levels
+  this.streams = opts.streams || Logger.defaultOptions.streams
   this.levels.forEach((level, i) => {
     this[level] = this.log.bind(this, level)
 
@@ -15,7 +15,7 @@ function Loggerr (options) {
   })
 
   // Setup formatter
-  let formatter = opts.formatter || Loggerr.defaultOptions.formatter
+  let formatter = opts.formatter || Logger.defaultOptions.formatter
   if (typeof formatter === 'string') {
     formatter = require(`${__dirname}/formatters/${formatter}`)
   }
@@ -26,11 +26,11 @@ function Loggerr (options) {
   } else if (typeof opts.level === 'string' && this.levels.includes(opts.level)) {
     this.level = this.levels.indexOf(opts.level)
   } else {
-    this.level = Loggerr.defaultOptions.level
+    this.level = Logger.defaultOptions.level
   }
 }
 
-Loggerr.levels = [
+Logger.levels = [
   'emergency',
   'alert',
   'critical',
@@ -42,21 +42,21 @@ Loggerr.levels = [
 ]
 
 // Add level constants
-Loggerr.levels.forEach(function (level, i) {
-  Loggerr[level.toUpperCase()] = i
+Logger.levels.forEach(function (level, i) {
+  Logger[level.toUpperCase()] = i
 })
 
 /**
  * The default options
  *
  */
-Loggerr.defaultOptions = {
-  level: Loggerr.WARNING,
+Logger.defaultOptions = {
+  level: Logger.WARNING,
   formatter: require('./formatters/default'),
-  streams: typeof window === 'undefined' ? Loggerr.levels.map(function (level, i) {
-    return i > Loggerr.WARNING ? process.stdout : process.stderr
-  }) : Loggerr.levels.map(function (level, i) {
-    return i > Loggerr.WARNING ? {
+  streams: typeof window === 'undefined' ? Logger.levels.map(function (level, i) {
+    return i > Logger.WARNING ? process.stdout : process.stderr
+  }) : Logger.levels.map(function (level, i) {
+    return i > Logger.WARNING ? {
       write: function (msg, encoding, done) {
         console.log(msg)
         if (typeof done === 'function') {
@@ -77,14 +77,14 @@ Loggerr.defaultOptions = {
 /**
  * Set the level for the logger from either a string
  */
-Loggerr.prototype.setLevel = function (level) {
-  this.level = (typeof level === 'string') ? Loggerr.levels.indexOf(level) : level
+Logger.prototype.setLevel = function (level) {
+  this.level = (typeof level === 'string') ? Logger.levels.indexOf(level) : level
 }
 
 /**
  * Logs a message to the given stream
  */
-Loggerr.prototype.log = function (level, msg, extra, done) {
+Logger.prototype.log = function (level, msg, extra, done) {
   // Require a level, matching output stream and that
   // it is greater then the set level of logging
   const i = this.levels.indexOf(level)
@@ -138,18 +138,18 @@ Loggerr.prototype.log = function (level, msg, extra, done) {
  * Abstracted out the actuall writing of the log so it
  * can be eaisly overridden in sub-classes
  */
-Loggerr.prototype._write = function (stream, msg, enc, done) {
+Logger.prototype._write = function (stream, msg, enc, done) {
   stream.write(msg, enc, done)
 }
 
-module.exports = new Loggerr()
-module.exports.Loggerr = Loggerr
+module.exports = new Logger()
+module.exports.Logger = Logger
 
 function ErrorContext (err, extra) {
   if (!(err instanceof Error)) {
     err = new Error(err)
     if (Error.captureStackTrace) {
-      Error.captureStackTrace(err, Loggerr.prototype.log)
+      Error.captureStackTrace(err, Logger.prototype.log)
     }
   }
   for (const key in extra) {
