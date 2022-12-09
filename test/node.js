@@ -1,4 +1,3 @@
-'use strict'
 const { describe, it, before, after } = require('mocha')
 const assert = require('assert')
 const fs = require('fs')
@@ -22,7 +21,7 @@ describe('Logger - node specific', function () {
       streams: Logger.levels.map(() => ({
         write: (chunk) => {
           assert.notStrictEqual(chunk.indexOf('Error: foobar'), -1)
-          assert.notStrictEqual(chunk.indexOf('loggerr/test/node.js:'), -1)
+          assert.notStrictEqual(chunk.indexOf('direct-logger/test/node.js:'), -1)
           done()
         }
       }))

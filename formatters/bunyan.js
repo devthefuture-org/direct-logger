@@ -1,4 +1,4 @@
-'use strict'
+
 const os = require('os')
 
 module.exports = function (date, level, data) {

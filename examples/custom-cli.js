@@ -1,4 +1,4 @@
-'use strict'
+
 const Loggerr = require('../').Loggerr
 const cli = require('../formatters/cli').create
 

@@ -1,16 +1,16 @@
 {
-  "name": "loggerr",
-  "version": "3.3.0",
+  "name": "direct-logger",
+  "version": "1.0.0",
   "description": "A simple logger to console or file",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "test": "standard && npm run examples && mocha",
+    "lint": "standard",
+    "test": "mocha",
     "test:debug": "mocha --inspect --inspect-brk --timeout=0",
-    "test:cover": "c8 mocha",
-    "examples": "for i in examples/*; do echo \"\n======-----======\n  $i\n======-----======\n\"; node \"$i\"; done",
-    "release": "npm t && standard-version && npm publish",
-    "postpublish": "git push && git push --tags"
+    "release": "standard-version",
+    "push": "git push && git push --tags",
+    "delivery": "yarn release && yarn push && yarn publish"
   },
   "keywords": [
     "log",
@@ -20,21 +20,20 @@
     "cli",
     "sync"
   ],
-  "author": "Wes Todd",
-  "license": "ISC",
+  "author": "devthejo",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wesleytodd/loggerr.git"
+    "url": "https://github.com/devthejo/direct-logger.git"
   },
   "bugs": {
-    "url": "https://github.com/wesleytodd/loggerr/issues"
+    "url": "https://github.com/devthejo/direct-logger/issues"
   },
-  "homepage": "https://github.com/wesleytodd/loggerr",
+  "homepage": "https://github.com/devthejo/direct-logger",
   "dependencies": {
     "chalk": "^4.1.0"
   },
   "devDependencies": {
-    "c8": "^7.3.0",
     "mocha": "^6.2.0",
     "standard": "^13.1.0",
     "standard-version": "^9.0.0"

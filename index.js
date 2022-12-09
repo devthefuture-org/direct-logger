@@ -1,8 +1,3 @@
-'use strict'
-
-/**
- * Loggerr constructor
- */
 function Loggerr (options) {
   if (!(this instanceof Loggerr)) {
     return new Loggerr(options)
