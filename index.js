@@ -39,12 +39,12 @@ function Logger (options) {
 }
 
 Logger.levels = [
-  "trace",
-  "debug",
-  "info",
-  "warn",
-  "error",
   "fatal",
+  "error",
+  "warn",
+  "info",
+  "debug",
+  "trace",
 ]
 
 // Add level constants
