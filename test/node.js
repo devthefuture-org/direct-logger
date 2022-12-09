@@ -40,10 +40,10 @@ describe('Logger - node specific', function () {
       streams: Logger.levels.map(function () {
         return file
       }),
-      level: Logger.ERROR,
+      level: Logger.ERROR
     })
     logger.error('foo', function () {
-      const c = fs.readFileSync(logfile, {encoding:"utf-8"})
+      const c = fs.readFileSync(logfile, { encoding: 'utf-8' })
       assert.notStrictEqual(c.indexOf('foo'), -1)
       fs.unlinkSync(logfile)
       done()
@@ -67,14 +67,14 @@ describe('Logger - node specific', function () {
       streams: Logger.levels.map(function (level, i) {
         return i <= Logger.ERROR ? err : out
       }),
-      level: Logger.WARN,
+      level: Logger.WARN
     })
 
     logger.error('foo', function () {
       logger.warn('bar', function () {
-        const ec = fs.readFileSync(errfile, {encoding:"utf-8"})
-        const oc = fs.readFileSync(outfile, {encoding:"utf-8"})
-        
+        const ec = fs.readFileSync(errfile, { encoding: 'utf-8' })
+        const oc = fs.readFileSync(outfile, { encoding: 'utf-8' })
+
         assert.notStrictEqual(ec.indexOf('error'), -1)
         assert.strictEqual(ec.indexOf('warn'), -1)
         assert.notStrictEqual(ec.indexOf('foo'), -1)
