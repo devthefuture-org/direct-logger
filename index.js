@@ -4,6 +4,8 @@ function Logger (options) {
   }
   const opts = options || {}
 
+  this.options = opts
+
   // Setup levels
   this.levels = opts.levels || Logger.levels
   this.streams = opts.streams || Logger.defaultOptions.streams
@@ -28,6 +30,9 @@ function Logger (options) {
   } else {
     this.level = Logger.defaultOptions.level
   }
+
+  // Setup fields
+  this.fields = opts.fields || Logger.defaultOptions.fields
 }
 
 Logger.levels = [
@@ -71,19 +76,25 @@ Logger.defaultOptions = {
         }
       }
     }
+  }),
+  fields: {}
+}
+
+Logger.prototype.child = function (fields = {}) {
+  return new Logger({
+    ...this.options,
+    level: this.level,
+    fields: {
+      ...this.fields,
+      ...fields
+    }
   })
 }
 
-/**
- * Set the level for the logger from either a string
- */
 Logger.prototype.setLevel = function (level) {
   this.level = (typeof level === 'string') ? Logger.levels.indexOf(level) : level
 }
 
-/**
- * Logs a message to the given stream
- */
 Logger.prototype.log = function (level, msg, extra, done) {
   // Require a level, matching output stream and that
   // it is greater then the set level of logging
@@ -101,7 +112,10 @@ Logger.prototype.log = function (level, msg, extra, done) {
     done = extra
     extra = {}
   }
-  const data = extra || {}
+  const data = {
+    ...(this.fields),
+    ...(extra || {}),
+  }
 
   // Set message on extra object
   const isErrorInstance = msg instanceof Error
