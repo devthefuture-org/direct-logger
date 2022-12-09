@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/devthejo/direct-logger/compare/v2.0.0...v2.1.0) (2022-12-09)
+
+
+### Features
+
+* interop pino: default + reversible arguments ([9342a2c](https://github.com/devthejo/direct-logger/commit/9342a2cba5208b2b4311bfc85e987e8bf2ba754a))
+
+
+### Bug Fixes
+
+* level order ([d752b03](https://github.com/devthejo/direct-logger/commit/d752b035b7adfce54249a489830436423864a2eb))
+* reversible arguments ([6edc6dc](https://github.com/devthejo/direct-logger/commit/6edc6dc83b6f002a76e6f7660a8377f8f64e1382))
+* tests ([e5bedbc](https://github.com/devthejo/direct-logger/commit/e5bedbc10b53256fbf7d7a69eeb2aef6dbee320c))
+
 ## 2.0.0 (2022-12-09)
 
 
