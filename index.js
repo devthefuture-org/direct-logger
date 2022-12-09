@@ -125,10 +125,10 @@ Logger.prototype.log = function (level, msg, extra, done) {
     return
   }
 
-  if(typeof msg === "object"){
-    const tmpExtra = extra
-    extra = msg
-    msg = tmpExtra
+  if(typeof extra === "string" || (typeof msg === "object" && typeof msg.toString !== "function")){
+    const tmpExtra = msg
+    msg = extra
+    extra = tmpExtra
   }
 
   // Extra is optional
