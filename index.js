@@ -6,23 +6,22 @@ function Logger (options) {
 
   this.options = opts
 
-  // Setup levels
+  
   this.levels = opts.levels || Logger.levels
   this.streams = opts.streams || Logger.defaultOptions.streams
   this.levels.forEach((level, i) => {
     this[level] = this.log.bind(this, level)
-
+    
     // Set write stream for level
     this.streams[i] = this.streams[i] || this.streams
   })
-
-  // Setup formatter
+  
   let formatter = opts.formatter || Logger.defaultOptions.formatter
   if (typeof formatter === 'string') {
     formatter = require(`${__dirname}/formatters/${formatter}`)
   }
   this.formatter = formatter
-
+  
   if (isFinite(opts.level)) {
     this.level = opts.level
   } else if (typeof opts.level === 'string' && this.levels.includes(opts.level)) {
@@ -30,9 +29,13 @@ function Logger (options) {
   } else {
     this.level = Logger.defaultOptions.level
   }
-
-  // Setup fields
+  
   this.fields = opts.fields || Logger.defaultOptions.fields
+  
+  this.secrets = new Set(opts.secrets) || Logger.defaultOptions.secrets
+  this.secretsHideCharsCount = opts.secretsHideCharsCount || Logger.defaultOptions.secretsHideCharsCount
+  this.secretsStringSubstition = opts.secretsStringSubstition || Logger.defaultOptions.secretsStringSubstition
+  this.secretsRepeatCharSubstition = opts.secretsRepeatCharSubstition || Logger.defaultOptions.secretsRepeatCharSubstition
 }
 
 Logger.levels = [
@@ -77,18 +80,35 @@ Logger.defaultOptions = {
       }
     }
   }),
-  fields: {}
+  fields: {},
+  secrets: [],
+  secretsHideCharsCount: false,
+  secretsStringSubstition: "***",
+  secretsRepeatCharSubstition: "*"
 }
 
-Logger.prototype.child = function (fields = {}) {
+Logger.prototype.child = function (fields = {}, options={}) {
   return new Logger({
     ...this.options,
     level: this.level,
+    ...options,
     fields: {
       ...this.fields,
       ...fields
-    }
+    },
   })
+}
+
+Logger.prototype.addSecret = function (secret) {
+  return this.secrets.add(secret)
+}
+
+Logger.prototype.deleteSecret = function (secret) {
+  return this.secrets.delete(secret)
+}
+
+Logger.prototype.hasSecret = function (secret) {
+  return this.secrets.hasSecret(secret)
 }
 
 Logger.prototype.setLevel = function (level) {
@@ -142,7 +162,15 @@ Logger.prototype.log = function (level, msg, extra, done) {
   })
 
   // Format the message
-  const message = this.formatter(new Date(), level, data)
+  let message = this.formatter(new Date(), level, data)
+  
+  // Redact secrets
+  for (const secret of [...this.secrets]) {
+    message = message.replaceAll(
+      secret,
+      this.secretsHideCharsCount ? this.secretsStringSubstition : this.secretsRepeatCharSubstition.repeat(secret.length)
+    )
+  }
 
   // Write out the message
   this._write(this.streams[i], message, 'utf8', done)
