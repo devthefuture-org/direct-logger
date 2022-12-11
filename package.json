@@ -10,7 +10,7 @@
     "test:debug": "mocha --inspect --inspect-brk --timeout=0",
     "release": "standard-version",
     "push": "git push && git push --tags",
-    "delivery": "yarn release && yarn push && yarn publish"
+    "delivery": "yarn release && yarn push && npm publish"
   },
   "keywords": [
     "log",
