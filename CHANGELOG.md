@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/devthejo/direct-logger/compare/v2.1.0...v2.2.0) (2022-12-11)
+
+
+### Features
+
+* minLevel + maxLevel ([a33f846](https://github.com/devthejo/direct-logger/commit/a33f846619433dddd643c198a9f9f138de09dabd))
+
+
+### Bug Fixes
+
+* delivery script ([b9c84e8](https://github.com/devthejo/direct-logger/commit/b9c84e8344094f07c5f8ac94d63c4bdcbe5395d1))
+* improve formatters and cli ([77706c8](https://github.com/devthejo/direct-logger/commit/77706c82f42574182ace0895b468b39fa2861bb0))
+* lint ([01dee89](https://github.com/devthejo/direct-logger/commit/01dee8937409dd9fbb56418e459d979d75f41dd6))
+
 ## [2.1.0](https://github.com/devthejo/direct-logger/compare/v2.0.0...v2.1.0) (2022-12-09)
 
 
