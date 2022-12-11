@@ -2,7 +2,7 @@
 
 ## based on https://github.com/wesleytodd/loggerr
 
-Logger API is interoperable with pino logger.
+Logger call API is interoperable with pino logger.
 
 **Features:**
 
