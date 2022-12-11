@@ -112,6 +112,24 @@ Logger.prototype.setLevel = function (level) {
   this.level = (typeof level === 'string') ? Logger.levels.indexOf(level) : level
 }
 
+Logger.prototype.minLevel = function (level) {
+  const newLevel = (typeof level === 'string') ? Logger.levels.indexOf(level) : level
+  if(newLevel>this.level){
+    this.level = newLevel
+    return true
+  }
+  return false
+}
+
+Logger.prototype.maxLevel = function (level) {
+  const newLevel = (typeof level === 'string') ? Logger.levels.indexOf(level) : level
+  if(newLevel<this.level){
+    this.level = newLevel
+    return true
+  }
+  return false
+}
+
 Logger.prototype.log = function (level, msg, extra, done) {
   // Require a level, matching output stream and that
   // it is greater then the set level of logging
