@@ -42,7 +42,7 @@ or disabled entirely. The default levels are as follows:
 
 - `fatal`
 - `error`
-- `warning` *(default)*
+- `warn` *(default)*
 - `info`
 - `debug`
 - `trace`
@@ -93,7 +93,7 @@ const logger = Logger({
       case Logger.ERROR:
         color = chalk.red
         break
-      case Logger.WARNING:
+      case Logger.WARN:
         color = chalk.yellow
         break
       case Logger.INFO:
@@ -138,7 +138,7 @@ way is to just map over `Logger.levels`, this is how we set the defaults:
 ```javascript
 Logger({
   streams: Logger.levels.map(function (level, i) {
-    return i > Logger.WARNING ? process.stdin : process.stderr
+    return i > Logger.WARN ? process.stdin : process.stderr
   })
 })
 ```
@@ -155,4 +155,50 @@ const logfile = fs.createWriteStream('./logs/stdout.log', {
 Logger({
   streams: Logger.levels.map(() => logfile)
 })
+```
+
+## Redact secrets
+
+```javascript
+const logger = Logger({
+  secrets: ["1234"],
+  secretsHideCharsCount: false, // default false
+  secretsStringSubstition: "***", // used when secretsHideCharsCount is true
+  secretsRepeatCharSubstition: "*", // used when secretsHideCharsCount is false
+})
+
+logger.info("secret is 123454678") // output "secret is ****5678"
+
+logger.addSecret("5678")
+logger.secretsHideCharsCount = true
+logger.info("secret is 123454678") // output "secret is ***"
+
+logger.deleteSecret("1234")
+logger.info("secret is 123454678") // output "secret is 1234***"
+
+const hasSecret = logger.hasSecret("54678") // hasSecret === true
+```
+
+## Arguments order
+
+Arguments orders are reversible.
+
+```javascript
+// classical
+logger.debug("Hello world !", { foo: "bar" })
+
+// pino compatible
+logger.debug({ foo: "bar" }, "Hello world !")
+
+// string message can be replaced by object having a `toString` method
+logger.debug({ foo: "bar" }, new Error("Here is a message"))
+logger.debug(new Error("Here is another message"), { foo: "bar" })
+```
+
+## Set Level
+
+```javascript
+logger.setLevel("warn")
+logger.minLevel("debug")
+logger.maxLevel("info")
 ```
