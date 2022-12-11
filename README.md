@@ -2,7 +2,7 @@
 
 ## based on https://github.com/wesleytodd/loggerr
 
-A very simple logger.
+Logger API is interoperable with pino logger.
 
 **Features:**
 
@@ -40,14 +40,12 @@ logger.info('Something happened', {
 Each log level can be directed to a different output stream
 or disabled entirely. The default levels are as follows:
 
-- `emergency`
-- `alert`
-- `critical`
+- `fatal`
 - `error`
 - `warning` *(default)*
-- `notice`
 - `info`
 - `debug`
+- `trace`
 
 Constants are available for setting and referencing the levels and
 their streams. These constants are the all uppercase version of the
@@ -91,14 +89,11 @@ const logger = Logger({
   formatter: (date, level, data) => {
     var color
     switch (Logger.levels.indexOf(level)) {
-      case Logger.EMERGENCY:
-      case Logger.ALERT:
-      case Logger.CRITICAL:
+      case Logger.FATAL:
       case Logger.ERROR:
         color = chalk.red
         break
       case Logger.WARNING:
-      case Logger.NOTICE:
         color = chalk.yellow
         break
       case Logger.INFO:
