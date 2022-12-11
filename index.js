@@ -17,7 +17,8 @@ function Logger (options) {
 
   let formatter = opts.formatter || Logger.defaultOptions.formatter
   if (typeof formatter === 'string') {
-    formatter = require(`${__dirname}/formatters/${formatter}`)
+    const formatterFactory = require(`${__dirname}/formatters/${formatter}`)
+    formatter = formatterFactory(this.options)
   }
   this.formatter = formatter
 
@@ -46,22 +47,17 @@ Logger.levels = [
   'trace'
 ]
 
-// Add level constants
 Logger.levels.forEach(function (level, i) {
   Logger[level.toUpperCase()] = i
 })
 
-/**
- * The default options
- *
- */
 Logger.defaultOptions = {
-  level: Logger.WARNING,
-  formatter: require('./formatters/default'),
+  level: Logger.INFO,
+  formatter: require('./formatters/default')(),
   streams: typeof window === 'undefined' ? Logger.levels.map(function (level, i) {
-    return i > Logger.WARNING ? process.stdout : process.stderr
+    return i >= Logger.WARN ? process.stdout : process.stderr
   }) : Logger.levels.map(function (level, i) {
-    return i > Logger.WARNING ? {
+    return i > Logger.WARN ? {
       write: function (msg, encoding, done) {
         console.log(msg)
         if (typeof done === 'function') {
@@ -114,7 +110,7 @@ Logger.prototype.setLevel = function (level) {
 
 Logger.prototype.minLevel = function (level) {
   const newLevel = (typeof level === 'string') ? Logger.levels.indexOf(level) : level
-  if(newLevel>this.level){
+  if (newLevel > this.level) {
     this.level = newLevel
     return true
   }
@@ -123,7 +119,7 @@ Logger.prototype.minLevel = function (level) {
 
 Logger.prototype.maxLevel = function (level) {
   const newLevel = (typeof level === 'string') ? Logger.levels.indexOf(level) : level
-  if(newLevel<this.level){
+  if (newLevel < this.level) {
     this.level = newLevel
     return true
   }

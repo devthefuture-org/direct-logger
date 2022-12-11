@@ -1,6 +1,5 @@
-
-const Logger = require('../').Logger
-const cli = require('../formatters/cli').create
+const { Logger } = require('../')
+const cli = require('../formatters/cli-legacy')
 
 const log = new Logger({
   formatter: cli({

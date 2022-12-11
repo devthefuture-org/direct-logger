@@ -1,8 +1,7 @@
-
 const { describe, it } = require('mocha')
 const assert = require('assert')
 const util = require('util')
-const Logger = require('../').Logger
+const { Logger } = require('../')
 const writer = function (cb) {
   return { write: cb }
 }
@@ -62,11 +61,11 @@ describe('Logger - basic', function () {
 
   it('should set the log level', function () {
     const logger = new Logger()
-    assert.strictEqual(logger.level, Logger.WARNING)
+    assert.strictEqual(logger.level, Logger.INFO)
     logger.setLevel('error')
     assert.strictEqual(logger.level, Logger.ERROR)
-    logger.setLevel(Logger.INFO)
-    assert.strictEqual(logger.level, Logger.INFO)
+    logger.setLevel(Logger.WARN)
+    assert.strictEqual(logger.level, Logger.WARN)
   })
 
   it('should auto new', function () {

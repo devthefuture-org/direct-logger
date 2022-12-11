@@ -1,7 +1,6 @@
-
 const os = require('os')
 
-module.exports = function (date, level, data) {
+module.exports = () => (date, level, data) => {
   let l = 0
   switch (level) {
     case 'debug':

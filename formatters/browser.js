@@ -1,4 +1,3 @@
-
-module.exports = function (date, level, data) {
+module.exports = () => (date, level, data) => {
   return data
 }

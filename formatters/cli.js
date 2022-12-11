@@ -1,64 +1,84 @@
-const util = require('util')
 const chalk = require('chalk')
 
-module.exports = createFormatter()
-module.exports.create = createFormatter
+const escapeStringRe = /.*[\n\r"\s].*/
+const escapeString = (s) => {
+  if (escapeStringRe.test(s)) {
+    s = JSON.stringify(s)
+  }
+  return s
+}
 
-function createFormatter (options) {
-  const opts = Object.assign({
+module.exports = (loggerOptions = {}) => {
+  const { formatterOptions } = loggerOptions
+
+  const colorByLevel = {
+    fatal: 'red',
+    error: 'red',
+    warn: 'yellow',
+    info: 'cyan',
+    debug: 'blue'
+  }
+  const opts = {
     colors: true,
-    levels: {
-      emergency: 'red',
-      alert: 'red',
-      critical: 'red',
-      error: 'red',
-      warning: 'yellow',
-      notice: 'yellow',
-      info: 'cyan',
-      debug: 'cyan'
-    },
+    defaultColor: "white",
+    levelColorByLevel: colorByLevel,
+    msgColorByLevel: colorByLevel,
     errorLevels: [
+      'warn',
       'error',
-      'critical',
-      'alert',
-      'emergency'
-    ]
-  }, options)
-
-  if (opts.colors === false) {
-    chalk.level = 0
+      'fatal'
+    ],
+    displayLevel: true,
+    fieldsColor: "white",
+    ...formatterOptions,
   }
 
-  return (date, level, data) => {
-    const color = chalk[opts.levels[level]] || chalk.white
+  const {
+    colors,
+    displayLevel,
+    fieldsColor,
+    defaultColor,
+    levelColorByLevel,
+    msgColorByLevel,
+    errorLevels,
+  } = opts
 
-    // level formatting
-    const l = color.underline(level) + (Array(Math.max(8 - level.length, 0)).join(' '))
+  const fieldsColorFunc = colors ? chalk[fieldsColor] || chalk[defaultColor] : (str)=>str
+
+  return (_date, level, data) => {
+    let l = ""
+    if(displayLevel){
+      const levelColor = levelColorByLevel[level] || colorByLevel[level]
+      const levelColorFunc = colors ? chalk[levelColor] || chalk[defaultColor] : (str)=>str
+      l = levelColorFunc.underline('[' + level.toUpperCase() + ']') + ' '
+    }
+    const msgColor = msgColorByLevel[level] || colorByLevel[level]
+    const msgColorFunc = colors ? chalk[msgColor] || chalk[defaultColor] : (str)=>str
 
     // hanlde multi-line messages
     let lines = data.msg.split('\n')
     const firstLine = lines.shift()
 
     // display stack trace for errors levels
-    if (opts.errorLevels.includes(level)) {
+    if (errorLevels.includes(level)) {
       // Remove multi-line message from stack
       const stack = data.err.stack.replace(data.msg, firstLine)
       lines = lines.concat(stack.split('\n'))
     }
 
     // dim and trim all but first line
-    lines = lines.map((s) => chalk.grey(s.trim()))
+    lines = lines.map((s) => s.trim())
     lines = [firstLine, ...lines].join('\n')
+    lines = msgColorFunc(lines)
 
-    // format details
-    const details = Object.keys(data).reduce((str, key) => {
-      // dont display the message or error in details
-      if (data[key] && key !== 'msg' && key !== 'err') {
-        str += `\n  ${chalk.grey('-')} ${key}: ${util.inspect(data[key], { colors: opts.colors !== false })}`
+    let fieldsString = Object.keys(data).reduce((str, key) => {
+      if (data[key] !== undefined && key !== 'msg' && key !== 'err') {
+        str += ` ${escapeString(key)}=${escapeString(data[key])}`
       }
       return str
     }, '')
+    fieldsString = fieldsColorFunc(fieldsString)
 
-    return `${l} ${chalk.grey('›')} ${lines} ${details}\n`
+    return `${l}${lines}${fieldsString}\n`
   }
 }

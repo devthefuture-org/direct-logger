@@ -1,8 +1,7 @@
-
-const Logger = require('../').Logger
+const { Logger } = require('../')
 
 const log = new Logger({
-  formatter: 'cli',
+  formatter: 'cli-legacy',
   level: 'info',
   levels: [
     'emergency',
