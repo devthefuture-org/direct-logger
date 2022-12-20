@@ -72,8 +72,12 @@ module.exports = (loggerOptions = {}) => {
     lines = msgColorFunc(lines)
 
     let fieldsString = Object.keys(data).reduce((str, key) => {
-      if (data[key] !== undefined && key !== 'msg' && key !== 'err') {
-        str += ` ${escapeString(key)}=${escapeString(data[key])}`
+      let value = data[key]
+      if (value !== undefined && key !== 'msg' && key !== 'err') {
+        if(typeof value === "function"){
+          value = require("util").inspect(value)
+        }
+        str += ` ${escapeString(key)}=${escapeString(value)}`
       }
       return str
     }, '')
