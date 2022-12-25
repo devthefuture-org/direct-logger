@@ -36,6 +36,8 @@ function Logger (options) {
   this.secretsHideCharsCount = opts.secretsHideCharsCount || Logger.defaultOptions.secretsHideCharsCount
   this.secretsStringSubstition = opts.secretsStringSubstition || Logger.defaultOptions.secretsStringSubstition
   this.secretsRepeatCharSubstition = opts.secretsRepeatCharSubstition || Logger.defaultOptions.secretsRepeatCharSubstition
+  
+  this.indentation = opts.indentation || Logger.defaultOptions.indentation
 }
 
 Logger.levels = [
@@ -77,7 +79,8 @@ Logger.defaultOptions = {
   secrets: [],
   secretsHideCharsCount: false,
   secretsStringSubstition: '***',
-  secretsRepeatCharSubstition: '*'
+  secretsRepeatCharSubstition: '*',
+  indentation: 0
 }
 
 Logger.prototype.child = function (fields = {}, options = {}) {
@@ -188,6 +191,9 @@ Logger.prototype.log = function (level, msg, extra, done) {
       this.secretsHideCharsCount ? this.secretsStringSubstition : this.secretsRepeatCharSubstition.repeat(secret.length)
     )
   }
+
+  // Indentation
+  message = `${" ".repeat(this.indentation)}${message}`
 
   // Write out the message
   this._write(this.streams[i], message, 'utf8', done)
