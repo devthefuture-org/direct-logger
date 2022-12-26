@@ -111,6 +111,30 @@ Logger.prototype.hasSecret = function (secret) {
   return this.secrets.hasSecret(secret)
 }
 
+Logger.prototype.setIndentation = function (indentation) {
+  this.indentation = indentation
+}
+
+Logger.prototype.getIndentation = function () {
+  return this.indentation
+}
+
+Logger.prototype.setPrefix = function (prefix) {
+  this.prefix = prefix
+}
+
+Logger.prototype.getPrefix = function () {
+  return this.prefix
+}
+
+Logger.prototype.setSuffix = function (suffix) {
+  this.suffix = suffix
+}
+
+Logger.prototype.getSuffix = function () {
+  return this.suffix
+}
+
 Logger.prototype.setLevel = function (level) {
   this.level = (typeof level === 'string') ? Logger.levels.indexOf(level) : level
 }
@@ -196,11 +220,11 @@ Logger.prototype.log = function (level, msg, extra, done) {
     )
   }
 
-  // Indentation
-  message = `${" ".repeat(this.indentation)}${message}`
-  
   // Prefix and Suffix
   message = `${this.prefix}${message}${this.suffix}`
+  
+  // Indentation
+  message = `${" ".repeat(this.indentation)}${message}`
 
   // Write out the message
   this._write(this.streams[i], message, 'utf8', done)
