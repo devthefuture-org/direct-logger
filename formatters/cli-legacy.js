@@ -13,7 +13,6 @@ module.exports = (options) => {
       debug: 'cyan'
     },
     errorLevels: [
-      'warn',
       'error',
       'fatal'
     ]

@@ -24,7 +24,6 @@ module.exports = (loggerOptions = {}) => {
     levelColorByLevel: colorByLevel,
     msgColorByLevel: colorByLevel,
     errorLevels: [
-      'warn',
       'error',
       'fatal'
     ],
