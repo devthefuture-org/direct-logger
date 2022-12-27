@@ -212,19 +212,21 @@ Logger.prototype.log = function (level, msg, extra, done) {
   // Format the message
   let message = this.formatter(new Date(), level, data)
 
-  // Redact secrets
-  for (const secret of [...this.secrets]) {
-    message = message.replaceAll(
-      secret,
-      this.secretsHideCharsCount ? this.secretsStringSubstition : this.secretsRepeatCharSubstition.repeat(secret.length)
-    )
-  }
-
-  // Prefix and Suffix
-  message = `${this.prefix}${message}${this.suffix}`
+  if(typeof message==="string"){
+    // Redact secrets
+    for (const secret of [...this.secrets]) {
+      message = message.replaceAll(
+        secret,
+        this.secretsHideCharsCount ? this.secretsStringSubstition : this.secretsRepeatCharSubstition.repeat(secret.length)
+      )
+    }
   
-  // Indentation
-  message = `${" ".repeat(this.indentation)}${message}`
+    // Prefix and Suffix
+    message = `${this.prefix}${message}${this.suffix}`
+    
+    // Indentation
+    message = `${" ".repeat(this.indentation)}${message}`
+  }
 
   // Write out the message
   this._write(this.streams[i], message, 'utf8', done)
