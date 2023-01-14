@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.5.1](https://github.com/devthejo/direct-logger/compare/v2.5.0...v2.5.1) (2023-01-14)
+
+
+### Bug Fixes
+
+* remove trim for cli formatter ([a1a2072](https://github.com/devthejo/direct-logger/commit/a1a207215b78f640606f1ed14fc51ebb7da3d315))
+
 ## [2.2.0](https://github.com/devthejo/direct-logger/compare/v2.1.0...v2.2.0) (2022-12-11)
 
 
