@@ -65,8 +65,6 @@ module.exports = (loggerOptions = {}) => {
       lines = lines.concat(stack.split('\n'))
     }
 
-    // dim and trim all but first line
-    lines = lines.map((s) => s.trim())
     lines = [firstLine, ...lines].join('\n')
     lines = msgColorFunc(lines)
 
