@@ -175,6 +175,10 @@ Logger.prototype.log = function (level, msg, extra, done) {
     extra = tmpExtra
   }
 
+  if(msg===undefined){
+    msg = ""
+  }
+
   // Extra is optional
   if (typeof extra === 'function') {
     done = extra
