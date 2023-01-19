@@ -188,7 +188,9 @@ Logger.prototype.log = function (level, msg, extra, done) {
   // Set message on extra object
   const isErrorInstance = msg instanceof Error
   data.msg = isErrorInstance ? msg.message : msg
-  data.code = msg.code || data.code
+  if(msg?.code){
+    data.code = msg.code
+  }
   // If this is an error, copy over other properties on the error
   if (isErrorInstance) {
     for (const key in msg) {
