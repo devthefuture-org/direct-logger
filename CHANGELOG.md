@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.5.3](https://github.com/devthejo/direct-logger/compare/v2.5.2...v2.5.3) (2023-01-19)
+
+
+### Bug Fixes
+
+* undefined msg ([3c84ba1](https://github.com/devthejo/direct-logger/commit/3c84ba12b38fe9c9b269be7191de6987ec03d31d))
+
 ### [2.5.2](https://github.com/devthejo/direct-logger/compare/v2.5.1...v2.5.2) (2023-01-19)
 
 
