@@ -41,7 +41,10 @@ module.exports = (loggerOptions = {}) => {
     msgColorByLevel,
     errorLevels,
     separator = '\u3000', // Ideographic Space // see https://stackoverflow.com/a/65074578/5338073
+    separatorReplacer = ' ',
   } = opts
+
+  const escapeSeparator = (str)=>str.replaceAll(separator, separatorReplacer)
 
   const fieldsColorFunc = colors ? chalk[fieldsColor] || chalk[defaultColor] : (str)=>str
 
@@ -75,12 +78,12 @@ module.exports = (loggerOptions = {}) => {
         if(typeof value === "function"){
           value = require("util").inspect(value)
         }
-        str += `${separator}${escapeString(key)}=${escapeString(value)}`
+        str += `${separator}${escapeString(escapeSeparator(key))}=${escapeString(escapeSeparator(value))}`
       }
       return str
     }, '')
     fieldsString = fieldsColorFunc(fieldsString)
 
-    return `${l}${lines}${fieldsString}\n`
+    return `${escapeSeparator(l+lines)}${fieldsString}\n`
   }
 }
