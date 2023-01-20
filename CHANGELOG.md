@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/devthejo/direct-logger/compare/v2.5.3...v2.6.0) (2023-01-20)
+
+
+### Features
+
+* separator option default ideographic space ([a8ce7a3](https://github.com/devthejo/direct-logger/commit/a8ce7a3210f436d53ccf72c5086cd61d750a705a))
+
 ### [2.5.3](https://github.com/devthejo/direct-logger/compare/v2.5.2...v2.5.3) (2023-01-19)
 
 
