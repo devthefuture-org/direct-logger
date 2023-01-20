@@ -2,7 +2,7 @@ const chalk = require('chalk')
 
 const escapeStringRe = /.*[\n\r"\s].*/
 const escapeString = (s) => {
-  if (escapeStringRe.test(s)) {
+  if (typeof s !== "string" || escapeStringRe.test(s)) {
     s = JSON.stringify(s)
   }
   return s
@@ -78,7 +78,7 @@ module.exports = (loggerOptions = {}) => {
         if(typeof value === "function"){
           value = require("util").inspect(value)
         }
-        str += `${separator}${escapeString(escapeSeparator(key))}=${escapeString(escapeSeparator(value))}`
+        str += `${separator}${escapeSeparator(escapeString(key))}=${escapeSeparator(escapeString(value))}`
       }
       return str
     }, '')
