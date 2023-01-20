@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.7.0](https://github.com/devthejo/direct-logger/compare/v2.6.0...v2.7.0) (2023-01-20)
+
+
+### Features
+
+* add methods + fix levels ([a573260](https://github.com/devthejo/direct-logger/commit/a5732602e6532a4d0532084d03e9a147ac9ce17c))
+* escape separator ([a69bab8](https://github.com/devthejo/direct-logger/commit/a69bab8ff82cd098269653fb53792b988855b39f))
+
 ## [2.6.0](https://github.com/devthejo/direct-logger/compare/v2.5.3...v2.6.0) (2023-01-20)
 
 
