@@ -99,6 +99,18 @@ Logger.prototype.child = function (fields = {}, options = {}) {
   })
 }
 
+Logger.prototype.setFields = function (fields) {
+  return this.fields = fields
+}
+
+Logger.prototype.getFields = function () {
+  return this.fields
+}
+
+Logger.prototype.setSecrets = function (secrets) {
+  return this.secrets = new Set(secrets)
+}
+
 Logger.prototype.addSecret = function (secret) {
   return this.secrets.add(secret)
 }
@@ -136,11 +148,20 @@ Logger.prototype.getSuffix = function () {
 }
 
 Logger.prototype.setLevel = function (level) {
-  this.level = (typeof level === 'string') ? Logger.levels.indexOf(level) : level
+  this.level = (typeof level === 'string') ? this.levels.indexOf(level) : level
 }
 
+Logger.prototype.getLevel = function () {
+  return this.levels[this.level]
+}
+
+Logger.prototype.getLevelIndex = function () {
+  return this.level
+}
+
+
 Logger.prototype.minLevel = function (level) {
-  const newLevel = (typeof level === 'string') ? Logger.levels.indexOf(level) : level
+  const newLevel = (typeof level === 'string') ? this.levels.indexOf(level) : level
   if (newLevel > this.level) {
     this.level = newLevel
     return true
@@ -149,7 +170,7 @@ Logger.prototype.minLevel = function (level) {
 }
 
 Logger.prototype.maxLevel = function (level) {
-  const newLevel = (typeof level === 'string') ? Logger.levels.indexOf(level) : level
+  const newLevel = (typeof level === 'string') ? this.levels.indexOf(level) : level
   if (newLevel < this.level) {
     this.level = newLevel
     return true
