@@ -8,6 +8,13 @@ const escapeString = (s) => {
   return s
 }
 
+const serializeMessage = (s) => {
+  if (typeof s !== "string") {
+    s = JSON.stringify(s, null, 2)
+  }
+  return s
+}
+
 module.exports = (loggerOptions = {}) => {
   const { formatterOptions } = loggerOptions
 
@@ -59,7 +66,7 @@ module.exports = (loggerOptions = {}) => {
     const msgColorFunc = colors ? chalk[msgColor] || chalk[defaultColor] : (str)=>str
 
     // hanlde multi-line messages
-    let lines = data.msg ? data.msg.split('\n') : []
+    let lines = serializeMessage(data.msg).split('\n')
     const firstLine = lines.shift()
 
     // display stack trace for errors levels
