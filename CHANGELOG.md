@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.7.2](https://github.com/devthejo/direct-logger/compare/v2.7.1...v2.7.2) (2023-02-14)
+
+
+### Bug Fixes
+
+* msg split not a function ([0d6b45e](https://github.com/devthejo/direct-logger/commit/0d6b45e7a47e16b36e99d60235bb0fad32c533fc))
+
 ### [2.7.1](https://github.com/devthejo/direct-logger/compare/v2.7.0...v2.7.1) (2023-01-20)
 
 
