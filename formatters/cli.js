@@ -59,7 +59,7 @@ module.exports = (loggerOptions = {}) => {
     const msgColorFunc = colors ? chalk[msgColor] || chalk[defaultColor] : (str)=>str
 
     // hanlde multi-line messages
-    let lines = data.msg.split('\n')
+    let lines = data.msg ? data.msg.split('\n') : []
     const firstLine = lines.shift()
 
     // display stack trace for errors levels

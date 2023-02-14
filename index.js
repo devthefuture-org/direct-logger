@@ -212,7 +212,7 @@ Logger.prototype.log = function (level, msg, extra, done) {
 
   // Set message on extra object
   const isErrorInstance = msg instanceof Error
-  data.msg = isErrorInstance ? msg.message : msg
+  data.msg = isErrorInstance ? (msg.message || "") : msg
   if(msg?.code){
     data.code = msg.code
   }
