@@ -1,3 +1,5 @@
+const WriteStream = require("./write-stream")
+
 function Logger (options) {
   if (!(this instanceof Logger)) {
     return new Logger(options)
@@ -176,6 +178,13 @@ Logger.prototype.maxLevel = function (level) {
     return true
   }
   return false
+}
+
+Logger.prototype.getStream = function (level=Logger.INFO) {
+  if(!this.loggerStream){    
+    this.loggerStream = new WriteStream(this, level)
+  }
+  return this.loggerStream
 }
 
 Logger.prototype.log = function (level, msg, extra, done) {
