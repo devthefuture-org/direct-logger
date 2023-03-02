@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.8.1](https://github.com/devthejo/direct-logger/compare/v2.8.0...v2.8.1) (2023-03-02)
+
+
+### Bug Fixes
+
+* stream factory ([93d24bd](https://github.com/devthejo/direct-logger/commit/93d24bd20cee7a99a3c8b0eacb80bb2a05b6318e))
+
 ## [2.8.0](https://github.com/devthejo/direct-logger/compare/v2.7.3...v2.8.0) (2023-02-22)
 
 
