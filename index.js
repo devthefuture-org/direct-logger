@@ -259,7 +259,7 @@ Logger.prototype.log = function (level, msg, extra, done) {
     data.msg = data.msg.trim()
   }
   if(this.skipEmptyMsg && data.msg.length === 0){
-    done()
+    done && done()
     return
   }
   
