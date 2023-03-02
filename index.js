@@ -180,8 +180,13 @@ Logger.prototype.maxLevel = function (level) {
   return false
 }
 
-Logger.prototype.createStream = function (level=Logger.INFO) {
-  return new WriteStream(this, level)
+Logger.prototype.createStream = function (config = {}) {
+  config = {
+    logger: this,
+    level: Logger.INFO,
+    ...config
+  }
+  return new WriteStream(config)
 }
 
 Logger.prototype.log = function (level, msg, extra, done) {
@@ -196,7 +201,11 @@ Logger.prototype.log = function (level, msg, extra, done) {
     return
   }
 
-  if (typeof extra === 'string' || (typeof msg === 'object' && typeof msg.toString !== 'function')) {
+  if(typeof msg === 'object' && typeof msg.toString === 'function'){
+    msg = msg.toString()
+  }
+
+  if (typeof extra === 'string' || typeof msg === 'object') {
     const tmpExtra = msg
     msg = extra
     extra = tmpExtra
