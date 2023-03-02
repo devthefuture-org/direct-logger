@@ -205,7 +205,7 @@ Logger.prototype.log = function (level, msg, extra, done) {
     return
   }
 
-  if(typeof msg === 'object' && typeof msg.toString === 'function'){
+  if(typeof msg === 'object' && typeof msg.toString === 'function' && !(msg instanceof Error)){
     msg = msg.toString()
   }
 
