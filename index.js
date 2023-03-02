@@ -259,12 +259,13 @@ Logger.prototype.log = function (level, msg, extra, done) {
     data.msg = data.msg.trim()
   }
   if(this.skipEmptyMsg && data.msg.length === 0){
+    done()
     return
   }
-
+  
   // Format the message
   let message = this.formatter(new Date(), level, data)
-
+  
   if(typeof message==="string"){
     // Redact secrets
     for (const secret of [...this.secrets]) {
