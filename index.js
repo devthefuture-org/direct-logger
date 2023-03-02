@@ -180,11 +180,8 @@ Logger.prototype.maxLevel = function (level) {
   return false
 }
 
-Logger.prototype.getStream = function (level=Logger.INFO) {
-  if(!this.loggerStream){    
-    this.loggerStream = new WriteStream(this, level)
-  }
-  return this.loggerStream
+Logger.prototype.createStream = function (level=Logger.INFO) {
+  return new WriteStream(this, level)
 }
 
 Logger.prototype.log = function (level, msg, extra, done) {
