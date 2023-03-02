@@ -22,7 +22,7 @@ module.exports = class WritableStream extends Writable {
       }
       return stream.write(data, enc, cb)
     } else {
-      logger[level](data, {}, cb)
+      return logger[level](data, {}, cb)
     }
   }
 }
