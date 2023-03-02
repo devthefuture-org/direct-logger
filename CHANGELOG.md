@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.10.4](https://github.com/devthejo/direct-logger/compare/v2.10.3...v2.10.4) (2023-03-02)
+
+
+### Bug Fixes
+
+* clean ([75fec72](https://github.com/devthejo/direct-logger/commit/75fec7260fdadef5ebe58dec29848ed230028140))
+* clean ([e814a40](https://github.com/devthejo/direct-logger/commit/e814a40d937a91c3cc5c43715607bb820e87c531))
+
 ### [2.10.3](https://github.com/devthejo/direct-logger/compare/v2.10.2...v2.10.3) (2023-03-02)
 
 
