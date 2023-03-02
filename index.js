@@ -42,6 +42,8 @@ function Logger (options) {
   this.indentation = opts.indentation || Logger.defaultOptions.indentation
   this.prefix = opts.prefix || Logger.defaultOptions.prefix
   this.suffix = opts.suffix || Logger.defaultOptions.suffix
+  this.trim = opts.trim || Logger.defaultOptions.trim
+  this.skipEmptyMsg = opts.skipEmptyMsg || Logger.defaultOptions.skipEmptyMsg
 }
 
 Logger.levels = [
@@ -87,6 +89,8 @@ Logger.defaultOptions = {
   indentation: 0,
   prefix: "",
   suffix: "",
+  trim: true,
+  skipEmptyMsg: true,
 }
 
 Logger.prototype.child = function (fields = {}, options = {}) {
@@ -250,6 +254,13 @@ Logger.prototype.log = function (level, msg, extra, done) {
       return err
     }
   })
+
+  if(this.trim) {
+    data.msg = data.msg.trim()
+  }
+  if(this.skipEmptyMsg && data.msg.length === 0){
+    return
+  }
 
   // Format the message
   let message = this.formatter(new Date(), level, data)
