@@ -1,4 +1,7 @@
 const { Writable } = require('node:stream');
+
+const nullFunc = ()=>{}
+
 module.exports = class WritableStream extends Writable {
   constructor(config={}){
     super()
@@ -24,13 +27,10 @@ module.exports = class WritableStream extends Writable {
       return stream.write(data, enc, cb)
     } else if(splitLines) {
       const lines = data.toString().split("\n")
-      Promise.all(lines.map(line=>{
-        return new Promise(resolve=>{
-          logger[level](line, {}, resolve)
-        })
-      })).then(()=>{
-        cb()
+      lines.map(line=>{
+        logger[level](line, {}, nullFunc)
       })
+      cb()
     } else {
       logger[level](data, {}, cb)
     }
