@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.10.0](https://github.com/devthejo/direct-logger/compare/v2.9.0...v2.10.0) (2023-03-02)
+
+
+### Features
+
+* skipEmptyMsg and trim ([e345bac](https://github.com/devthejo/direct-logger/commit/e345bac1b2bcdbdab40ab67e2001bbabc8d00627))
+
+
+### Bug Fixes
+
+* skipEmptyMsg ([f89be82](https://github.com/devthejo/direct-logger/commit/f89be823368a1f15167259551bd09280ac831856))
+
 ## [2.9.0](https://github.com/devthejo/direct-logger/compare/v2.8.1...v2.9.0) (2023-03-02)
 
 
