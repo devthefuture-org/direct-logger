@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.9.0](https://github.com/devthejo/direct-logger/compare/v2.8.1...v2.9.0) (2023-03-02)
+
+
+### Features
+
+* improve createStream + autocast buffer ([cff1bde](https://github.com/devthejo/direct-logger/commit/cff1bdefc4d3e7b1473b4db3c19244ac1996d6fa))
+
 ### [2.8.1](https://github.com/devthejo/direct-logger/compare/v2.8.0...v2.8.1) (2023-03-02)
 
 
