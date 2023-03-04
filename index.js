@@ -201,15 +201,15 @@ Logger.prototype.log = function (level, msg, extra, done) {
     typeof level !== 'string' ||
     i > this.level ||
     !this.streams[i]
-  ) {
-    return
+    ) {
+      return
   }
-
+  
   if(typeof msg === 'object' && typeof msg.toString === 'function' && !(msg instanceof Error)){
     msg = msg.toString()
   }
-
-  if (typeof extra === 'string' || typeof msg === 'object') {
+  
+  if (typeof extra === 'string' || (typeof msg === 'object' && !(msg instanceof Error))) {
     const tmpExtra = msg
     msg = extra
     extra = tmpExtra
@@ -235,6 +235,7 @@ Logger.prototype.log = function (level, msg, extra, done) {
   if(msg?.code){
     data.code = msg.code
   }
+
   // If this is an error, copy over other properties on the error
   if (isErrorInstance) {
     for (const key in msg) {
