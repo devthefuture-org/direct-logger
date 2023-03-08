@@ -1,4 +1,5 @@
-const WriteStream = require("./write-stream")
+const WriteStream = require("./utils/write-stream")
+const removeAllAnsiColors = require("./utils/remove-all-ansi-colors")
 
 function Logger (options) {
   if (!(this instanceof Logger)) {
@@ -39,7 +40,12 @@ function Logger (options) {
   this.secretsStringSubstition = opts.secretsStringSubstition || Logger.defaultOptions.secretsStringSubstition
   this.secretsRepeatCharSubstition = opts.secretsRepeatCharSubstition || Logger.defaultOptions.secretsRepeatCharSubstition
   
-  this.indentation = opts.indentation || Logger.defaultOptions.indentation
+  this.enforceLinesSeparation = opts.enforceLinesSeparation || Logger.defaultOptions.enforceLinesSeparation
+  this.setIndentation(opts.indentation || Logger.defaultOptions.indentation)
+  this.indentMultiline = opts.indentMultiline || Logger.defaultOptions.indentMultiline
+  this.setIndentMultilinePadding(opts.indentMultilinePadding || Logger.defaultOptions.indentMultilinePadding)
+  this.prefixMultiline = opts.prefixMultiline || Logger.defaultOptions.prefixMultiline
+  this.suffixMultiline = opts.prefixMultiline || Logger.defaultOptions.suffixMultiline
   this.prefix = opts.prefix || Logger.defaultOptions.prefix
   this.suffix = opts.suffix || Logger.defaultOptions.suffix
   this.trim = opts.trim || Logger.defaultOptions.trim
@@ -86,7 +92,12 @@ Logger.defaultOptions = {
   secretsHideCharsCount: false,
   secretsStringSubstition: '***',
   secretsRepeatCharSubstition: '*',
+  enforceLinesSeparation: true,
   indentation: 0,
+  indentMultiline: false,
+  indentMultilinePadding: false,
+  prefixMultiline: false,
+  suffixMultiline: false,
   prefix: "",
   suffix: "",
   trim: true,
@@ -129,8 +140,31 @@ Logger.prototype.hasSecret = function (secret) {
   return this.secrets.hasSecret(secret)
 }
 
+Logger.prototype._setIndentationPadding = function () {
+  this.indentationPadding = this.indentMultilinePadding && this.prefix ? `${" ".repeat(removeAllAnsiColors(this.prefix).length)}` : ""
+}
+
+Logger.prototype.setIndentMultilinePadding = function (indentMultilinePadding) {
+  this.indentMultilinePadding = indentMultilinePadding
+  this._setIndentationPadding()
+}
+
+Logger.prototype.setEnforceLinesSeparation = function (b) {
+  this.enforceLinesSeparation = b
+}
+Logger.prototype.setIndentMultiline = function (b) {
+  this.indentMultiline = b
+}
+Logger.prototype.setPrefixMultiline = function (b) {
+  this.prefixMultiline = b
+}
+Logger.prototype.setSuffixMultiline = function (b) {
+  this.suffixMultiline = b
+}
+
 Logger.prototype.setIndentation = function (indentation) {
   this.indentation = indentation
+  this.indentationString = `${" ".repeat(this.indentation)}`
 }
 
 Logger.prototype.getIndentation = function () {
@@ -139,6 +173,7 @@ Logger.prototype.getIndentation = function () {
 
 Logger.prototype.setPrefix = function (prefix) {
   this.prefix = prefix
+  this._setIndentationPadding()
 }
 
 Logger.prototype.getPrefix = function () {
@@ -197,6 +232,7 @@ Logger.prototype.log = function (level, msg, extra, done) {
   // Require a level, matching output stream and that
   // it is greater then the set level of logging
   const i = this.levels.indexOf(level)
+
   if (
     typeof level !== 'string' ||
     i > this.level ||
@@ -205,7 +241,7 @@ Logger.prototype.log = function (level, msg, extra, done) {
       return
   }
   
-  if(typeof msg === 'object' && typeof msg.toString === 'function' && !(msg instanceof Error)){
+  if(msg instanceof Buffer) {
     msg = msg.toString()
   }
   
@@ -263,7 +299,7 @@ Logger.prototype.log = function (level, msg, extra, done) {
     done && done()
     return
   }
-  
+
   // Format the message
   let message = this.formatter(new Date(), level, data)
   
@@ -275,16 +311,40 @@ Logger.prototype.log = function (level, msg, extra, done) {
         this.secretsHideCharsCount ? this.secretsStringSubstition : this.secretsRepeatCharSubstition.repeat(secret.length)
       )
     }
-  
-    // Prefix and Suffix
-    message = `${this.prefix}${message}${this.suffix}`
     
-    // Indentation
-    message = `${" ".repeat(this.indentation)}${message}`
+    // Indentation, Prefix, Suffix
+    if(this.prefixMultiline || this.suffixMultiline || this.indentMultiline){
+      const lines = message.split('\n')
+      const lastLineIndex = lines.length - 1
+      message = lines.map((line, i) => {
+        const prefix = (this.prefixMultiline || i === 0) ? this.prefix : ""
+        const suffix = (this.suffixMultiline || i === lastLineIndex) ? this.suffix : ""
+        let indentation = this.indentMultiline || i === 0 ? this.indentationString : ""
+        if(!prefix){
+          indentation = `${indentation}${this.indentationPadding}`
+        }
+        return `${indentation}${prefix}${line}${suffix}`
+      }).join('\n')
+    } else {
+      message = `${this.indentationString}${this.prefix}${message}${this.suffix}`
+    }
   }
 
   // Write out the message
-  this._write(this.streams[i], message, 'utf8', done)
+  if(this.enforceLinesSeparation){
+    const lines = message.split('\n')
+    for(const line of lines){
+      if(line.trim().length === 0){
+        continue
+      }
+      this._write(this.streams[i], line+"\n", 'utf8')
+    }
+    if(typeof done === "function"){
+      done()
+    }
+  } else {
+    this._write(this.streams[i], message, 'utf8', done)
+  }
 }
 
 /**
