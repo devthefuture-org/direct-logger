@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.11.0](https://github.com/devthejo/direct-logger/compare/v2.10.5...v2.11.0) (2023-03-08)
+
+
+### Features
+
+* deep multiline + fix obj serialization ([f4fe1f0](https://github.com/devthejo/direct-logger/commit/f4fe1f0eac434392ba80a2af62c574a0b4a45620))
+
 ### [2.10.5](https://github.com/devthejo/direct-logger/compare/v2.10.4...v2.10.5) (2023-03-04)
 
 
