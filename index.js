@@ -292,6 +292,10 @@ Logger.prototype.log = function (level, msg, extra, done) {
     }
   })
 
+  if(typeof data.msg!=="string"){
+    data.msg = data.msg.toString()
+  }
+  
   if(this.trim) {
     data.msg = data.msg.trim()
   }
