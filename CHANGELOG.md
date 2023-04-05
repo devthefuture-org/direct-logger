@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.13.0](https://github.com/devthejo/direct-logger/compare/v2.12.0...v2.13.0) (2023-04-05)
+
+
+### Features
+
+* date + duration + refactor + fix tests ([ea83c09](https://github.com/devthejo/direct-logger/commit/ea83c09b686010260691e11e70e010b00c92d493))
+
 ## [2.12.0](https://github.com/devthejo/direct-logger/compare/v2.11.1...v2.12.0) (2023-04-05)
 
 
