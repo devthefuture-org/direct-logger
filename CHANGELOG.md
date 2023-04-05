@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.12.0](https://github.com/devthejo/direct-logger/compare/v2.11.1...v2.12.0) (2023-04-05)
+
+
+### Features
+
+* add end waiter function ([ad323e6](https://github.com/devthejo/direct-logger/commit/ad323e68be1ab4b3cd7423bb3970e8a2f106b0dc))
+* add stream helpers ([154af42](https://github.com/devthejo/direct-logger/commit/154af4282780ef3116b339514de6faf0407d10ea))
+
 ### [2.11.1](https://github.com/devthejo/direct-logger/compare/v2.11.0...v2.11.1) (2023-03-24)
 
 
