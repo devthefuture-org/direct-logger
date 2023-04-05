@@ -1,6 +1,6 @@
 const { Writable } = require('node:stream');
 
-module.exports = class WritableStream extends Writable {
+module.exports = class WriteStream extends Writable {
   constructor(config={}){
     super()
     const {logger, level="info", raw=false} = config

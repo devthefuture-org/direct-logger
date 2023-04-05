@@ -359,6 +359,19 @@ Logger.prototype._write = function (stream, msg, enc, done) {
   stream.write(msg, enc, done)
 }
 
+Logger.prototype.end = async function () {
+  return Promise.all(
+    this.streams.map((stream) => {
+      stream.end()
+      return new Promise((resolve) => {
+        stream.once("finish", () => {
+          resolve()
+        })
+      })
+    })
+  )
+}
+
 module.exports = new Logger()
 module.exports.Logger = Logger
 
@@ -387,3 +400,6 @@ function ErrorContext (err, extra) {
   }
   return err
 }
+
+module.exports.streamCombiner = require("./utils/stream-combiner")
+module.exports.streamTransformer = require("./utils/stream-transformer")
