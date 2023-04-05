@@ -31,7 +31,8 @@
   },
   "homepage": "https://github.com/devthejo/direct-logger",
   "dependencies": {
-    "chalk": "^4.1.0"
+    "chalk": "^4.1.0",
+    "dayjs": "^1.11.7"
   },
   "devDependencies": {
     "mocha": "^6.2.0",

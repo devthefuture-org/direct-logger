@@ -1,5 +1,8 @@
 const WriteStream = require("./utils/write-stream")
 const removeAllAnsiColors = require("./utils/remove-all-ansi-colors")
+const ErrorContext = require("./utils/error-context")
+const streamCombiner = require("./utils/stream-combiner")
+const streamTransformer =require("./utils/stream-transformer")
 
 function Logger (options) {
   if (!(this instanceof Logger)) {
@@ -21,7 +24,7 @@ function Logger (options) {
   let formatter = opts.formatter || Logger.defaultOptions.formatter
   if (typeof formatter === 'string') {
     const formatterFactory = require(`${__dirname}/formatters/${formatter}`)
-    formatter = formatterFactory(this.options)
+    formatter = formatterFactory({...this.options, logger: this})
   }
   this.formatter = formatter
 
@@ -287,7 +290,7 @@ Logger.prototype.log = function (level, msg, extra, done) {
     enumerable: true,
     configurable: true,
     get: () => {
-      err = err || ErrorContext(msg)
+      err = err || ErrorContext(Logger, msg)
       return err
     }
   })
@@ -305,37 +308,10 @@ Logger.prototype.log = function (level, msg, extra, done) {
   }
 
   // Format the message
-  let message = this.formatter(new Date(), level, data)
-  
-  if(typeof message==="string"){
-    // Redact secrets
-    for (const secret of [...this.secrets]) {
-      message = message.replaceAll(
-        secret,
-        this.secretsHideCharsCount ? this.secretsStringSubstition : this.secretsRepeatCharSubstition.repeat(secret.length)
-      )
-    }
-    
-    // Indentation, Prefix, Suffix
-    if(this.prefixMultiline || this.suffixMultiline || this.indentMultiline){
-      const lines = message.split('\n')
-      const lastLineIndex = lines.length - 1
-      message = lines.map((line, i) => {
-        const prefix = (this.prefixMultiline || i === 0) ? this.prefix : ""
-        const suffix = (this.suffixMultiline || i === lastLineIndex) ? this.suffix : ""
-        let indentation = this.indentMultiline || i === 0 ? this.indentationString : ""
-        if(!prefix){
-          indentation = `${indentation}${this.indentationPadding}`
-        }
-        return `${indentation}${prefix}${line}${suffix}`
-      }).join('\n')
-    } else {
-      message = `${this.indentationString}${this.prefix}${message}${this.suffix}`
-    }
-  }
+  const message = this.formatter(new Date(), level, data)
 
   // Write out the message
-  if(this.enforceLinesSeparation){
+  if(this.enforceLinesSeparation && typeof message === "string"){
     const lines = message.split('\n')
     for(const line of lines){
       if(line.trim().length === 0){
@@ -351,10 +327,7 @@ Logger.prototype.log = function (level, msg, extra, done) {
   }
 }
 
-/**
- * Abstracted out the actuall writing of the log so it
- * can be eaisly overridden in sub-classes
- */
+// Abstracted out the actual writing of the log so it can be eaisly overridden in sub-classes
 Logger.prototype._write = function (stream, msg, enc, done) {
   stream.write(msg, enc, done)
 }
@@ -373,33 +346,9 @@ Logger.prototype.end = async function () {
 }
 
 module.exports = new Logger()
+
 module.exports.Logger = Logger
 
-function ErrorContext (err, extra) {
-  if (!(err instanceof Error)) {
-    err = new Error(err)
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(err, Logger.prototype.log)
-    }
-  }
-  for (const key in extra) {
-    err[key] = extra[key]
-  }
-  err.toJSON = function () {
-    const o = {
-      name: err.name,
-      message: err.message,
-      stack: err.stack
-    }
-    for (const key in err) {
-      if (key !== 'toJSON') {
-        o[key] = err[key]
-      }
-    }
-    return o
-  }
-  return err
-}
+module.exports.streamCombiner = streamCombiner
 
-module.exports.streamCombiner = require("./utils/stream-combiner")
-module.exports.streamTransformer = require("./utils/stream-transformer")
+module.exports.streamTransformer = streamTransformer

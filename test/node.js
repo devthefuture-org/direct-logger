@@ -42,7 +42,8 @@ describe('Logger - node specific', function () {
       }),
       level: Logger.ERROR
     })
-    logger.error('foo', function () {
+    logger.error('foo', async function () {
+      await logger.end()
       const c = fs.readFileSync(logfile, { encoding: 'utf-8' })
       assert.notStrictEqual(c.indexOf('foo'), -1)
       fs.unlinkSync(logfile)
@@ -71,7 +72,8 @@ describe('Logger - node specific', function () {
     })
 
     logger.error('foo', function () {
-      logger.warn('bar', function () {
+      logger.warn('bar', async function () {
+        await logger.end()
         const ec = fs.readFileSync(errfile, { encoding: 'utf-8' })
         const oc = fs.readFileSync(outfile, { encoding: 'utf-8' })
 
