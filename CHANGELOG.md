@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.14.0](https://github.com/devthejo/direct-logger/compare/v2.13.0...v2.14.0) (2023-04-07)
+
+
+### Features
+
+* add FileWriteStreamSync helper ([b0156d2](https://github.com/devthejo/direct-logger/commit/b0156d225b22a66f7c65de24abdc872546b9b8dc))
+* fomatter as factory ([7455ea8](https://github.com/devthejo/direct-logger/commit/7455ea82d0d1a7b584c501ca20855e5f93565bc3))
+
+
+### Bug Fixes
+
+* default enforceLinesSeparation ([f7f59b7](https://github.com/devthejo/direct-logger/commit/f7f59b7f54d57f3b636e89fab99e13d3223629be))
+* serialize error ([7563328](https://github.com/devthejo/direct-logger/commit/75633282ec58be711405da07beec65100e7a75c1))
+* sync and wait for end ([de25c2d](https://github.com/devthejo/direct-logger/commit/de25c2d45b3671b9ee269c42ed6fa12fce48170f))
+
 ## [2.13.0](https://github.com/devthejo/direct-logger/compare/v2.12.0...v2.13.0) (2023-04-05)
 
 
