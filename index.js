@@ -52,6 +52,9 @@ function Logger (options) {
   this.suffix = opts.suffix || Logger.defaultOptions.suffix
   this.trim = opts.trim || Logger.defaultOptions.trim
   this.skipEmptyMsg = opts.skipEmptyMsg || Logger.defaultOptions.skipEmptyMsg
+
+
+  this.children = []
 }
 
 Logger.levels = [
@@ -107,7 +110,7 @@ Logger.defaultOptions = {
 }
 
 Logger.prototype.child = function (fields = {}, options = {}) {
-  return new Logger({
+  const child = new Logger({
     ...this.options,
     level: this.level,
     ...options,
@@ -116,6 +119,8 @@ Logger.prototype.child = function (fields = {}, options = {}) {
       ...fields
     }
   })
+  this.children.push(child)
+  return child
 }
 
 Logger.prototype.setFields = function (fields) {
@@ -328,12 +333,16 @@ Logger.prototype.log = function (level, msg, extra, done) {
 
 // Abstracted out the actual writing of the log so it can be eaisly overridden in sub-classes
 Logger.prototype._write = function (stream, msg, enc, done) {
+  if(!stream.writable){
+    return
+  }
   stream.write(msg, enc, done)
 }
 
 Logger.prototype.end = async function () {
-  return Promise.all(
-    this.streams.map((stream) => {
+  return Promise.all([
+    ...this.children.map((child) => child.end()),
+    ...this.streams.map((stream) => {
       stream.end()
       return new Promise((resolve) => {
         stream.once("finish", () => {
@@ -341,7 +350,7 @@ Logger.prototype.end = async function () {
         })
       })
     })
-  )
+  ])
 }
 
 module.exports = new Logger()
