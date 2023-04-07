@@ -99,7 +99,7 @@ Logger.defaultOptions = {
   secretsHideCharsCount: false,
   secretsStringSubstition: '***',
   secretsRepeatCharSubstition: '*',
-  enforceLinesSeparation: false,
+  enforceLinesSeparation: true,
   indentation: 0,
   indentMultiline: false,
   indentMultilinePadding: false,
