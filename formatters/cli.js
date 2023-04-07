@@ -1,7 +1,11 @@
+const util = require("util")
 const chalk = require('chalk')
+
 const dayjs = require("../libs/dayjs")
 const dayjsDurationToObject = require('../libs/dayjs-duration-to-object')
 const lightDuration = require("../utils/light-duration")
+
+const serializeError = require("../utils/serialize-error")
 
 const escapeStringRe = /.*[\n\r"\s].*/
 const escapeString = (s) => {
@@ -12,6 +16,9 @@ const escapeString = (s) => {
 }
 
 const serializeMessage = (s) => {
+  if (s instanceof Error) {
+    return serializeError(s)
+  }
   if (typeof s !== "string") {
     s = JSON.stringify(s, null, 2)
   }
@@ -59,7 +66,7 @@ module.exports = (loggerOptions = {}) => {
     defaultColor,
     levelColorByLevel,
     msgColorByLevel,
-    errorLevels,
+    // errorLevels,
     separator = '\u3000', // Ideographic Space // see https://stackoverflow.com/a/65074578/5338073
     separatorReplacer = ' ',
   } = opts
@@ -97,21 +104,17 @@ module.exports = (loggerOptions = {}) => {
     let lines = serializeMessage(data.msg).split('\n')
     const firstLine = lines.shift()
 
-    // display stack trace for errors levels
-    if (errorLevels.includes(level)) {
-      // Remove multi-line message from stack
-      const stack = data.err.stack.replace(data.msg, firstLine)
-      lines = lines.concat(stack.split('\n'))
-    }
-
     lines = [firstLine, ...lines].join('\n')
     lines = msgColorFunc(lines)
 
     let fieldsString = Object.keys(data).reduce((str, key) => {
       let value = data[key]
-      if (value !== undefined && key !== 'msg' && key !== 'err') {
+      if(value instanceof Error){
+        value = serializeError(value)
+      }
+      if (value !== undefined && key !== 'msg') {
         if(typeof value === "function"){
-          value = require("util").inspect(value)
+          value = util.inspect(value)
         }
         str += `${separator}${escapeSeparator(escapeString(key))}=${escapeSeparator(escapeString(value))}`
       }

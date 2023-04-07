@@ -1,8 +1,9 @@
+const Deferred = require("./utils/deferred");
 const WriteStream = require("./utils/write-stream")
 const removeAllAnsiColors = require("./utils/remove-all-ansi-colors")
-const ErrorContext = require("./utils/error-context")
 const streamCombiner = require("./utils/stream-combiner")
 const streamTransformer =require("./utils/stream-transformer")
+const serializeError = require("./utils/serialize-error")
 
 function Logger (options) {
   if (!(this instanceof Logger)) {
@@ -55,6 +56,7 @@ function Logger (options) {
 
 
   this.children = []
+  this.waiting = new Set()
 }
 
 Logger.levels = [
@@ -97,7 +99,7 @@ Logger.defaultOptions = {
   secretsHideCharsCount: false,
   secretsStringSubstition: '***',
   secretsRepeatCharSubstition: '*',
-  enforceLinesSeparation: true,
+  enforceLinesSeparation: false,
   indentation: 0,
   indentMultiline: false,
   indentMultilinePadding: false,
@@ -273,43 +275,26 @@ Logger.prototype.log = function (level, msg, extra, done) {
   }
 
   // Set message on extra object
-  const isErrorInstance = msg instanceof Error
-  data.msg = isErrorInstance ? (msg.message || "") : msg
-  if(msg?.code){
-    data.code = msg.code
+  if (msg instanceof Error) {
+    if(msg.code){
+      data.code = msg.code
+    }
+    msg = serializeError(msg)
   }
 
-  // If this is an error, copy over other properties on the error
-  if (isErrorInstance) {
-    for (const key in msg) {
-      if (Object.prototype.hasOwnProperty.call(msg, key)) {
-        data[key] = msg[key]
-      }
-    }
-  }
-
-  // Lazy create error
-  let err
-  Object.defineProperty(data, 'err', {
-    enumerable: true,
-    configurable: true,
-    get: () => {
-      err = err || ErrorContext(Logger, msg)
-      return err
-    }
-  })
-
-  if(typeof data.msg!=="string"){
-    data.msg = data.msg.toString()
+  if(typeof msg!=="string"){
+    msg = data.msg.toString()
   }
   
   if(this.trim) {
-    data.msg = data.msg.trim()
+    msg = msg.trim()
   }
-  if(this.skipEmptyMsg && data.msg.length === 0){
+  if(this.skipEmptyMsg && msg.length === 0){
     done && done()
     return
   }
+
+  data.msg = msg
 
   // Format the message
   const message = this.formatter(new Date(), level, data)
@@ -317,17 +302,32 @@ Logger.prototype.log = function (level, msg, extra, done) {
   // Write out the message
   if(this.enforceLinesSeparation && typeof message === "string"){
     const lines = message.split('\n')
+    const promises = []
     for(const line of lines){
       if(line.trim().length === 0){
         continue
       }
-      this._write(this.streams[i], line+"\n", 'utf8')
+      const deferred = new Deferred()
+      promises.push(deferred.promise)
+      this._write(this.streams[i], line+"\n", 'utf8', deferred.resolve)
     }
-    if(typeof done === "function"){
-      done()
-    }
+    this.waiting.add(promises)
+    Promise.all(promises).then(()=>{
+      if(typeof done === "function"){
+        done()
+      }
+      this.waiting.delete(promises)
+    })
   } else {
-    this._write(this.streams[i], message, 'utf8', done)
+    const deferred = new Deferred()
+    this._write(this.streams[i], message, 'utf8', deferred.resolve)
+    this.waiting.add(deferred.promise)
+    deferred.promise.then(()=>{
+      if(typeof done === "function"){
+        done()
+      }
+      this.waiting.delete(deferred.promise)
+    })
   }
 }
 
@@ -340,6 +340,7 @@ Logger.prototype._write = function (stream, msg, enc, done) {
 }
 
 Logger.prototype.end = async function () {
+  await Promise.all([...this.waiting].flatMap(p=>p))
   return Promise.all([
     ...this.children.map((child) => child.end()),
     ...this.streams.map((stream) => {
