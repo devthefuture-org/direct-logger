@@ -23,10 +23,9 @@ function Logger (options) {
 
   let formatter = opts.formatter || Logger.defaultOptions.formatter
   if (typeof formatter === 'string') {
-    const formatterFactory = require(`${__dirname}/formatters/${formatter}`)
-    formatter = formatterFactory({...this.options, logger: this})
+    formatter = require(`${__dirname}/formatters/${formatter}`)
   }
-  this.formatter = formatter
+  this.formatter = formatter({...this.options, logger: this})
 
   if (isFinite(opts.level)) {
     this.level = opts.level
