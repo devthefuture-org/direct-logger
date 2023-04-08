@@ -3,6 +3,7 @@ const WriteStream = require("./utils/write-stream")
 const removeAllAnsiColors = require("./utils/remove-all-ansi-colors")
 const streamCombiner = require("./utils/stream-combiner")
 const streamTransformer =require("./utils/stream-transformer")
+const fileWriteStreamSync = require("./utils/file-write-stream-sync")
 const serializeError = require("./utils/serialize-error")
 
 function Logger (options) {
@@ -361,3 +362,5 @@ module.exports.Logger = Logger
 module.exports.streamCombiner = streamCombiner
 
 module.exports.streamTransformer = streamTransformer
+
+module.exports.fileWriteStreamSync = fileWriteStreamSync
