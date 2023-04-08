@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.14.1](https://github.com/devthejo/direct-logger/compare/v2.14.0...v2.14.1) (2023-04-08)
+
+
+### Bug Fixes
+
+* expose fileWriteStreamSync ([ab843b1](https://github.com/devthejo/direct-logger/commit/ab843b1a1276a1172a758d7c2ca28c7128ce9ff2))
+
 ## [2.14.0](https://github.com/devthejo/direct-logger/compare/v2.13.0...v2.14.0) (2023-04-07)
 
 
