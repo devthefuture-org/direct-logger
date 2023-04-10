@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.15.0](https://github.com/devthejo/direct-logger/compare/v2.14.1...v2.15.0) (2023-04-10)
+
+
+### Features
+
+* stream as function return 2 full sync target ([2ced94b](https://github.com/devthejo/direct-logger/commit/2ced94ba4280e6cf2b843cac1d20783be8e7d5e4))
+
 ### [2.14.1](https://github.com/devthejo/direct-logger/compare/v2.14.0...v2.14.1) (2023-04-08)
 
 
