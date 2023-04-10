@@ -1,8 +1,6 @@
-const Deferred = require("./utils/deferred");
+const { Writable } = require('node:stream')
 const WriteStream = require("./utils/write-stream")
 const removeAllAnsiColors = require("./utils/remove-all-ansi-colors")
-const streamCombiner = require("./utils/stream-combiner")
-const streamTransformer =require("./utils/stream-transformer")
 const fileWriteStreamSync = require("./utils/file-write-stream-sync")
 const serializeError = require("./utils/serialize-error")
 
@@ -54,10 +52,6 @@ function Logger (options) {
   this.suffix = opts.suffix || Logger.defaultOptions.suffix
   this.trim = opts.trim || Logger.defaultOptions.trim
   this.skipEmptyMsg = opts.skipEmptyMsg || Logger.defaultOptions.skipEmptyMsg
-
-
-  this.children = []
-  this.waiting = new Set()
 }
 
 Logger.levels = [
@@ -122,7 +116,6 @@ Logger.prototype.child = function (fields = {}, options = {}) {
       ...fields
     }
   })
-  this.children.push(child)
   return child
 }
 
@@ -303,64 +296,29 @@ Logger.prototype.log = function (level, msg, extra, done) {
   // Write out the message
   if(this.enforceLinesSeparation && typeof message === "string"){
     const lines = message.split('\n')
-    const promises = []
     for(const line of lines){
       if(line.trim().length === 0){
         continue
       }
-      const deferred = new Deferred()
-      promises.push(deferred.promise)
-      this._write(this.streams[i], line+"\n", 'utf8', deferred.resolve)
+      this._write(this.streams[i], line+"\n", 'utf8')
     }
-    this.waiting.add(promises)
-    Promise.all(promises).then(()=>{
-      if(typeof done === "function"){
-        done()
-      }
-      this.waiting.delete(promises)
-    })
+    done && done()
   } else {
-    const deferred = new Deferred()
-    this._write(this.streams[i], message, 'utf8', deferred.resolve)
-    this.waiting.add(deferred.promise)
-    deferred.promise.then(()=>{
-      if(typeof done === "function"){
-        done()
-      }
-      this.waiting.delete(deferred.promise)
-    })
+    this._write(this.streams[i], message, 'utf8', done)
   }
 }
 
 // Abstracted out the actual writing of the log so it can be eaisly overridden in sub-classes
 Logger.prototype._write = function (stream, msg, enc, done) {
-  if(!stream.writable){
-    return
+  if(stream instanceof Writable){
+    stream.write(msg, enc, done)
+  } else {
+    stream(msg, enc, done)
   }
-  stream.write(msg, enc, done)
-}
-
-Logger.prototype.end = async function () {
-  await Promise.all([...this.waiting].flatMap(p=>p))
-  return Promise.all([
-    ...this.children.map((child) => child.end()),
-    ...this.streams.map((stream) => {
-      stream.end()
-      return new Promise((resolve) => {
-        stream.once("finish", () => {
-          resolve()
-        })
-      })
-    })
-  ])
 }
 
 module.exports = new Logger()
 
 module.exports.Logger = Logger
-
-module.exports.streamCombiner = streamCombiner
-
-module.exports.streamTransformer = streamTransformer
 
 module.exports.fileWriteStreamSync = fileWriteStreamSync
