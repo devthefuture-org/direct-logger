@@ -1,20 +1,21 @@
-const { Writable } = require('node:stream');
+const { Writable } = require('node:stream')
 
 module.exports = class WriteStream extends Writable {
-  constructor(config={}){
+  constructor (config = {}) {
     super()
-    const {logger, level="info", raw=false} = config
+    const { logger, level = 'info', raw = false } = config
     this.logger = logger
     this.level = level
     this.raw = raw
   }
-  _write(data, enc, cb){
+
+  _write (data, enc, cb) {
     const {
       logger,
       level,
-      raw,
+      raw
     } = this
-    if(raw) {
+    if (raw) {
       const i = logger.levels.indexOf(level)
       const stream = logger.streams[i]
       if (i > logger.level || !stream) {

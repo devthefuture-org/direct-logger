@@ -1,8 +1,8 @@
 const { Writable } = require('node:stream')
-const WriteStream = require("./utils/write-stream")
-const removeAllAnsiColors = require("./utils/remove-all-ansi-colors")
-const fileWriteStreamSync = require("./utils/file-write-stream-sync")
-const serializeError = require("./utils/serialize-error")
+const WriteStream = require('./utils/write-stream')
+const removeAllAnsiColors = require('./utils/remove-all-ansi-colors')
+const fileWriteStreamSync = require('./utils/file-write-stream-sync')
+const serializeError = require('./utils/serialize-error')
 
 function Logger (options) {
   if (!(this instanceof Logger)) {
@@ -21,11 +21,13 @@ function Logger (options) {
     this.streams[i] = this.streams[i] || this.streams
   })
 
+  this.dateStart = opts.dateStart || new Date()
+
   let formatter = opts.formatter || Logger.defaultOptions.formatter
   if (typeof formatter === 'string') {
     formatter = require(`${__dirname}/formatters/${formatter}`)
   }
-  this.formatter = formatter({...this.options, logger: this})
+  this.formatter = formatter({ ...this.options, logger: this })
 
   if (isFinite(opts.level)) {
     this.level = opts.level
@@ -41,7 +43,7 @@ function Logger (options) {
   this.secretsHideCharsCount = opts.secretsHideCharsCount || Logger.defaultOptions.secretsHideCharsCount
   this.secretsStringSubstition = opts.secretsStringSubstition || Logger.defaultOptions.secretsStringSubstition
   this.secretsRepeatCharSubstition = opts.secretsRepeatCharSubstition || Logger.defaultOptions.secretsRepeatCharSubstition
-  
+
   this.enforceLinesSeparation = opts.enforceLinesSeparation || Logger.defaultOptions.enforceLinesSeparation
   this.setIndentation(opts.indentation || Logger.defaultOptions.indentation)
   this.indentMultiline = opts.indentMultiline || Logger.defaultOptions.indentMultiline
@@ -100,16 +102,17 @@ Logger.defaultOptions = {
   indentMultilinePadding: false,
   prefixMultiline: false,
   suffixMultiline: false,
-  prefix: "",
-  suffix: "",
+  prefix: '',
+  suffix: '',
   trim: true,
-  skipEmptyMsg: true,
+  skipEmptyMsg: true
 }
 
 Logger.prototype.child = function (fields = {}, options = {}) {
   const child = new Logger({
     ...this.options,
     level: this.level,
+    dateStart: this.dateStart,
     ...options,
     fields: {
       ...this.fields,
@@ -120,7 +123,8 @@ Logger.prototype.child = function (fields = {}, options = {}) {
 }
 
 Logger.prototype.setFields = function (fields) {
-  return this.fields = fields
+  this.fields = fields
+  return this.fields
 }
 
 Logger.prototype.getFields = function () {
@@ -128,7 +132,8 @@ Logger.prototype.getFields = function () {
 }
 
 Logger.prototype.setSecrets = function (secrets) {
-  return this.secrets = new Set(secrets)
+  this.secrets = new Set(secrets)
+  return this.secrets
 }
 
 Logger.prototype.addSecret = function (secret) {
@@ -143,8 +148,17 @@ Logger.prototype.hasSecret = function (secret) {
   return this.secrets.hasSecret(secret)
 }
 
+Logger.prototype.getDateStart = function () {
+  return this.dateStart
+}
+
+Logger.prototype.setDateStart = function (dateStart) {
+  this.dateStart = dateStart
+  return this.dateStart
+}
+
 Logger.prototype._setIndentationPadding = function () {
-  this.indentationPadding = this.indentMultilinePadding && this.prefix ? `${" ".repeat(removeAllAnsiColors(this.prefix).length)}` : ""
+  this.indentationPadding = this.indentMultilinePadding && this.prefix ? `${' '.repeat(removeAllAnsiColors(this.prefix).length)}` : ''
 }
 
 Logger.prototype.setIndentMultilinePadding = function (indentMultilinePadding) {
@@ -167,7 +181,7 @@ Logger.prototype.setSuffixMultiline = function (b) {
 
 Logger.prototype.setIndentation = function (indentation) {
   this.indentation = indentation
-  this.indentationString = `${" ".repeat(this.indentation)}`
+  this.indentationString = `${' '.repeat(this.indentation)}`
 }
 
 Logger.prototype.getIndentation = function () {
@@ -202,7 +216,6 @@ Logger.prototype.getLevel = function () {
 Logger.prototype.getLevelIndex = function () {
   return this.level
 }
-
 
 Logger.prototype.minLevel = function (level) {
   const newLevel = (typeof level === 'string') ? this.levels.indexOf(level) : level
@@ -240,22 +253,22 @@ Logger.prototype.log = function (level, msg, extra, done) {
     typeof level !== 'string' ||
     i > this.level ||
     !this.streams[i]
-    ) {
-      return
+  ) {
+    return
   }
-  
-  if(msg instanceof Buffer) {
+
+  if (msg instanceof Buffer) {
     msg = msg.toString()
   }
-  
+
   if (typeof extra === 'string' || (typeof msg === 'object' && !(msg instanceof Error))) {
     const tmpExtra = msg
     msg = extra
     extra = tmpExtra
   }
 
-  if(msg===undefined){
-    msg = ""
+  if (msg === undefined) {
+    msg = ''
   }
 
   // Extra is optional
@@ -270,20 +283,20 @@ Logger.prototype.log = function (level, msg, extra, done) {
 
   // Set message on extra object
   if (msg instanceof Error) {
-    if(msg.code){
+    if (msg.code) {
       data.code = msg.code
     }
     msg = serializeError(msg)
   }
 
-  if(typeof msg!=="string"){
+  if (typeof msg !== 'string') {
     msg = data.msg.toString()
   }
-  
-  if(this.trim) {
+
+  if (this.trim) {
     msg = msg.trim()
   }
-  if(this.skipEmptyMsg && msg.length === 0){
+  if (this.skipEmptyMsg && msg.length === 0) {
     done && done()
     return
   }
@@ -294,13 +307,13 @@ Logger.prototype.log = function (level, msg, extra, done) {
   const message = this.formatter(new Date(), level, data)
 
   // Write out the message
-  if(this.enforceLinesSeparation && typeof message === "string"){
+  if (this.enforceLinesSeparation && typeof message === 'string') {
     const lines = message.split('\n')
-    for(const line of lines){
-      if(line.trim().length === 0){
+    for (const line of lines) {
+      if (line.trim().length === 0) {
         continue
       }
-      this._write(this.streams[i], line+"\n", 'utf8')
+      this._write(this.streams[i], line + '\n', 'utf8')
     }
     done && done()
   } else {
@@ -310,7 +323,7 @@ Logger.prototype.log = function (level, msg, extra, done) {
 
 // Abstracted out the actual writing of the log so it can be eaisly overridden in sub-classes
 Logger.prototype._write = function (stream, msg, enc, done) {
-  if(stream instanceof Writable){
+  if (stream instanceof Writable) {
     stream.write(msg, enc, done)
   } else {
     stream(msg, enc, done)

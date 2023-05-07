@@ -1,5 +1,4 @@
-const dayjs = require("./dayjs")
-module.exports = (duration)=>{
+module.exports = (duration) => {
   return {
     years: duration.years(),
     months: duration.months(),
@@ -7,6 +6,6 @@ module.exports = (duration)=>{
     hours: duration.hours(),
     minutes: duration.minutes(),
     seconds: duration.seconds(),
-    milliseconds: duration.milliseconds(),
+    milliseconds: duration.milliseconds()
   }
 }
