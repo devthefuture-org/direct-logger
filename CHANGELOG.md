@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.15.1](https://github.com/devthejo/direct-logger/compare/v2.15.0...v2.15.1) (2023-05-07)
+
+
+### Bug Fixes
+
+* relay dateStart to children logger + lint ([67d40d7](https://github.com/devthejo/direct-logger/commit/67d40d7090353227c50e6cf203d06d26726eb015))
+
 ## [2.15.0](https://github.com/devthejo/direct-logger/compare/v2.14.1...v2.15.0) (2023-04-10)
 
 
