@@ -202,3 +202,15 @@ logger.setLevel("warn")
 logger.minLevel("debug")
 logger.maxLevel("info")
 ```
+
+## Contributing:
+
+We welcome contributions! If you encounter a bug or have a feature suggestion, please open an issue. To contribute code, simply fork the repository and submit a pull request.
+
+This repository is mirrored on both GitHub and Codeberg. Contributions can be made on either platform, as the repositories are synchronized bidirectionally. 
+- Codeberg: [https://codeberg.org/devthefuture/direct-logger](https://codeberg.org/devthefuture/direct-logger)
+- GitHub: [https://github.com/devthefuture-org/direct-logger](https://github.com/devthefuture-org/direct-logger)
+
+For more information:
+- [Why mirror to Codeberg?](https://codeberg.org/Recommendations/Mirror_to_Codeberg#why-should-we-mirror-to-codeberg)
+- [GitHub to Codeberg mirroring tutorial](https://codeberg.org/Recommendations/Mirror_to_Codeberg#github-codeberg-mirroring-tutorial)
