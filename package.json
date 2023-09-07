@@ -24,12 +24,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/devthejo/direct-logger.git"
+    "url": "https://codeberg.org/devthefuture/direct-logger.git"
   },
   "bugs": {
-    "url": "https://github.com/devthejo/direct-logger/issues"
+    "url": "https://codeberg.org/devthefuture/direct-logger/issues"
   },
-  "homepage": "https://github.com/devthejo/direct-logger",
+  "homepage": "https://codeberg.org/devthefuture/direct-logger",
   "dependencies": {
     "chalk": "^4.1.0",
     "dayjs": "^1.11.7"
